@@ -36,7 +36,7 @@ class UserRestaurantsActivity : AppCompatActivity() {
         recyclerView.addItemDecoration(spacingDecoration)
 
         val adapter = RestaurantAdapter { restaurant ->
-            val intent = Intent(this, BookingActivity::class.java)
+            val intent = Intent(this, RestaurantDetailsActivity::class.java)
             intent.putExtra("RESTAURANT_ID", restaurant.id)
             intent.putExtra("RESTAURANT_NAME", restaurant.name)
             intent.putExtra("USER_ID", userId)
@@ -48,12 +48,19 @@ class UserRestaurantsActivity : AppCompatActivity() {
         val myBookingsRecyclerView = findViewById<RecyclerView>(R.id.myBookingsRecyclerView)
         myBookingsRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         
-        // Use HorizontalBookingAdapter but without the delete callback for now (simplicity first)
-        // actually revert to simple adapter or update adapter signature next.
-        // For now I'll assume the adapter still has the lambda but ignores it or I pass empty.
-        val myBookingsAdapter = com.example.restaurantbooking.ui.adapter.HorizontalBookingAdapter { 
-             // No-op for revert or we can keep the delete if user wants, but request was "back to working version"
-             // Assuming previous version didn't have delete.
+        // Use HorizontalBookingAdapter with cancel logic
+        val myBookingsAdapter = com.example.restaurantbooking.ui.adapter.HorizontalBookingAdapter { bookingId ->
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Отмена бронирования")
+                .setMessage("Вы уверены, что хотите отменить это бронирование?")
+                .setPositiveButton("Да") { _, _ ->
+                    lifecycleScope.launch {
+                        viewModel.deleteBooking(bookingId)
+                        loadBookings()
+                    }
+                }
+                .setNegativeButton("Нет", null)
+                .show()
         }
         
         myBookingsRecyclerView.adapter = myBookingsAdapter

@@ -102,6 +102,14 @@ class BookingRepository(
         return true
     }
 
+    suspend fun getAdminsByRestaurant(restaurantId: Int): List<User> {
+        return userDao.getAdminsByRestaurant(restaurantId)
+    }
+
+    suspend fun deleteUser(user: User) {
+        userDao.delete(user)
+    }
+
     suspend fun createSuperAdminIfNotExists() {
         if (userDao.getUserByEmail("admin") == null) {
             val admin = User(

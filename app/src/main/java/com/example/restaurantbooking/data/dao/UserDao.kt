@@ -21,7 +21,10 @@ interface UserDao {
     suspend fun getUserByEmail(email: String): User?
 
     @Query("SELECT * FROM users WHERE role = 'admin' AND restaurantId = :restaurantId")
-    suspend fun getAdminByRestaurant(restaurantId: Int): User?
+    suspend fun getAdminsByRestaurant(restaurantId: Int): List<User>
+
+    @Delete
+    suspend fun delete(user: User)
 
     @Query("SELECT * FROM users WHERE role = 'superadmin'")
     suspend fun getSuperAdmin(): User?

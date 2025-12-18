@@ -40,7 +40,7 @@ class SuperAdminActivity : AppCompatActivity() {
 
         // Настройка адаптера для ресторанов
         restaurantsAdapter = RestaurantAdapter { restaurant ->
-            val intent = Intent(this, AddAdminActivity::class.java)
+            val intent = Intent(this, ManageAdminsActivity::class.java)
             intent.putExtra("RESTAURANT_ID", restaurant.id)
             intent.putExtra("RESTAURANT_NAME", restaurant.name)
             startActivity(intent)

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bookingScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.BookingActivity">
@@ -80,72 +81,6 @@
             android:layout_height="wrap_content"
             android:text="Забронировать"
             android:layout_marginBottom="32dp"/>
-
-        <!-- REVIEWS SECTION -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginBottom="24dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Отзывы и Рейтинг"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp"/>
-
-        <Button
-            android:id="@+id/toggleReviewFormButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Оставить отзыв"
-            android:layout_marginBottom="16dp"/>
-
-        <LinearLayout
-            android:id="@+id/reviewFormLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:layout_marginBottom="16dp"
-            android:padding="16dp"
-            android:background="#f0f0f0">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ваша оценка:"
-                android:layout_marginBottom="8dp"/>
-
-            <RatingBar
-                android:id="@+id/ratingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="5"
-                android:stepSize="1"
-                android:layout_marginBottom="16dp"/>
-
-            <EditText
-                android:id="@+id/reviewCommentEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Напишите комментарий..."
-                android:layout_marginBottom="16dp"/>
-
-            <Button
-                android:id="@+id/submitReviewButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Отправить"/>
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/reviewsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"/>
 
     </LinearLayout>
 </ScrollView>

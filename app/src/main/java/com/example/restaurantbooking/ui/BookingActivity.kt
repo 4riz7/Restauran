@@ -91,60 +91,6 @@ class BookingActivity : AppCompatActivity() {
             ).show()
         }
 
-        // Рецензии
-        val reviewsRecyclerView = findViewById<RecyclerView>(R.id.reviewsRecyclerView)
-        val reviewAdapter = com.example.restaurantbooking.ui.adapter.ReviewAdapter()
-        reviewsRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
-        reviewsRecyclerView.adapter = reviewAdapter
-
-        val toggleReviewFormButton = findViewById<Button>(R.id.toggleReviewFormButton)
-        val reviewFormLayout = findViewById<LinearLayout>(R.id.reviewFormLayout)
-        val submitReviewButton = findViewById<Button>(R.id.submitReviewButton)
-        val ratingBar = findViewById<RatingBar>(R.id.ratingBar)
-        val reviewCommentEditText = findViewById<EditText>(R.id.reviewCommentEditText)
-
-        toggleReviewFormButton.setOnClickListener {
-            if (reviewFormLayout.visibility == android.view.View.VISIBLE) {
-                reviewFormLayout.visibility = android.view.View.GONE
-                toggleReviewFormButton.text = "Оставить отзыв"
-            } else {
-                reviewFormLayout.visibility = android.view.View.VISIBLE
-                toggleReviewFormButton.text = "Скрыть форму"
-            }
-        }
-
-        submitReviewButton.setOnClickListener {
-            val rating = ratingBar.rating.toInt()
-            val comment = reviewCommentEditText.text.toString()
-
-            if (rating == 0) {
-                Toast.makeText(this, "Поставьте оценку", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            lifecycleScope.launch {
-                // В реальном приложении нужно получить имя пользователя из сессии
-                val userName = "User #$userId" 
-                viewModel.addReview(restaurantId, userId, userName, rating, comment)
-                Toast.makeText(this@BookingActivity, "Отзыв добавлен", Toast.LENGTH_SHORT).show()
-                
-                // Сброс формы и обновление списка
-                ratingBar.rating = 0f
-                reviewCommentEditText.text.clear()
-                reviewFormLayout.visibility = android.view.View.GONE
-                toggleReviewFormButton.text = "Оставить отзыв"
-                
-                val reviews = viewModel.getReviewsForRestaurant(restaurantId)
-                reviewAdapter.submitList(reviews)
-            }
-        }
-        
-        // Загрузка отзывов
-        lifecycleScope.launch {
-            val reviews = viewModel.getReviewsForRestaurant(restaurantId)
-            reviewAdapter.submitList(reviews)
-        }
-
         // Бронирование
         bookButton.setOnClickListener {
             val date = dateEditText.text.toString()

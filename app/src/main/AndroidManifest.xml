@@ -32,6 +32,8 @@
         <activity android:name=".ui.SuperAdminActivity" />
         <activity android:name=".ui.AddRestaurantActivity" />
         <activity android:name=".ui.AddAdminActivity" />
+        <activity android:name=".ui.ManageAdminsActivity" />
+        <activity android:name=".ui.RestaurantDetailsActivity" />
     </application>
 
 </manifest>

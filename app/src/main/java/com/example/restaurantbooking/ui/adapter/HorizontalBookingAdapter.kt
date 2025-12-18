@@ -1,0 +1,55 @@
+package com.example.restaurantbooking.ui.adapter
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.example.restaurantbooking.R
+import com.example.restaurantbooking.data.BookingWithRestaurant
+
+
+
+class HorizontalBookingAdapter(
+    private val onDeleteClick: (Int) -> Unit = {}
+) : ListAdapter<BookingWithRestaurant, HorizontalBookingAdapter.ViewHolder>(BookingDiffCallback()) {
+
+    class ViewHolder(view: View, private val onDeleteClick: (Int) -> Unit) : RecyclerView.ViewHolder(view) {
+        private val dateTextView: TextView = view.findViewById(R.id.dateTextView)
+        private val timeTextView: TextView = view.findViewById(R.id.timeTextView)
+        private val guestsTextView: TextView = view.findViewById(R.id.guestsTextView)
+        private val bookingIdTextView: TextView = view.findViewById(R.id.bookingIdTextView)
+        private val restaurantNameTextView: TextView = view.findViewById(R.id.restaurantNameTextView)
+        private val cancelButton: android.widget.Button = view.findViewById(R.id.cancelButton)
+        private var currentItem: BookingWithRestaurant? = null
+
+        init {
+            cancelButton.setOnClickListener {
+                currentItem?.let { item ->
+                    onDeleteClick(item.booking.id)
+                }
+            }
+        }
+
+        fun bind(item: BookingWithRestaurant) {
+            currentItem = item
+            val booking = item.booking
+            dateTextView.text = booking.date
+            timeTextView.text = booking.time
+            guestsTextView.text = "Гостей: ${booking.guests}"
+            bookingIdTextView.text = String.format("#%04d", booking.id)
+            restaurantNameTextView.text = item.restaurantName
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_horizontal_booking, parent, false)
+        return ViewHolder(view, onDeleteClick)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+}

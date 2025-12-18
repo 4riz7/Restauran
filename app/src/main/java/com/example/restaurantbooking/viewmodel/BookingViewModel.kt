@@ -42,6 +42,12 @@ class BookingViewModel(private val repository: BookingRepository) : ViewModel() 
 
     suspend fun deleteBooking(bookingId: Int) = repository.deleteBooking(bookingId)
 
+    suspend fun getAdminsByRestaurant(restaurantId: Int) = repository.getAdminsByRestaurant(restaurantId)
+
+    suspend fun deleteUser(user: com.example.restaurantbooking.data.User) = repository.deleteUser(user)
+
+    suspend fun updateUser(user: com.example.restaurantbooking.data.User) = repository.updateUser(user)
+
     suspend fun addReview(restaurantId: Int, userId: Int, userName: String, rating: Int, comment: String) {
         repository.addReview(restaurantId, userId, userName, rating, comment)
     }
