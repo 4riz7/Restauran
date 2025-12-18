@@ -42,6 +42,24 @@
         android:layout_marginBottom="4dp"/>
 
     <TextView
+        android:id="@+id/restaurantNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ресторан: "
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/userInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Клиент: "
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="4dp"
+        android:visibility="gone"/>
+
+    <TextView
         android:id="@+id/bookingIdTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

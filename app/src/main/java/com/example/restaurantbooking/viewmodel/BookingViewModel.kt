@@ -19,10 +19,12 @@ class BookingViewModel(private val repository: BookingRepository) : ViewModel() 
 
     suspend fun loginUser(email: String, password: String) = repository.loginUser(email, password)
 
-    suspend fun addRestaurant(name: String, address: String, description: String = "") =
-        repository.addRestaurant(name, address, description)
+    suspend fun addRestaurant(name: String, address: String, description: String = "", tableCount: Int = 10, websiteUrl: String = "") =
+        repository.addRestaurant(name, address, description, tableCount, websiteUrl)
 
-    suspend fun getAllRestaurants() = repository.getAllRestaurants()
+    suspend fun getAllRestaurants(): List<com.example.restaurantbooking.data.RestaurantWithRating> = repository.getAllRestaurants()
+
+    suspend fun getRestaurantById(restaurantId: Int) = repository.getRestaurantById(restaurantId)
 
     suspend fun createBooking(userId: Int, restaurantId: Int, date: String, time: String, guests: Int): Boolean {
         return repository.createBooking(userId, restaurantId, date, time, guests)
@@ -37,4 +39,12 @@ class BookingViewModel(private val repository: BookingRepository) : ViewModel() 
     }
 
     suspend fun getUserBookings(userId: Int) = repository.getUserBookings(userId)
+
+    suspend fun deleteBooking(bookingId: Int) = repository.deleteBooking(bookingId)
+
+    suspend fun addReview(restaurantId: Int, userId: Int, userName: String, rating: Int, comment: String) {
+        repository.addReview(restaurantId, userId, userName, rating, comment)
+    }
+
+    suspend fun getReviewsForRestaurant(restaurantId: Int) = repository.getReviewsForRestaurant(restaurantId)
 }

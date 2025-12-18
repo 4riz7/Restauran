@@ -27,7 +27,7 @@ class AddAdminActivity : AppCompatActivity() {
         restaurantName = intent.getStringExtra("RESTAURANT_NAME") ?: ""
 
         val db = AppDatabase.getDatabase(this)
-        val repository = BookingRepository(db.userDao(), db.restaurantDao(), db.bookingDao())
+        val repository = BookingRepository(db.userDao(), db.restaurantDao(), db.bookingDao(), db.reviewDao())
         viewModel = BookingViewModel(repository)
 
         val restaurantNameTextView = findViewById<TextView>(R.id.restaurantNameTextView)

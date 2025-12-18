@@ -20,7 +20,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         val db = AppDatabase.getDatabase(this)
-        val repository = BookingRepository(db.userDao(), db.restaurantDao(), db.bookingDao())
+        val repository = BookingRepository(db.userDao(), db.restaurantDao(), db.bookingDao(), db.reviewDao())
         viewModel = BookingViewModel(repository)
 
         val emailEditText = findViewById<EditText>(R.id.emailEditText)
@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
                         "admin" -> {
                             val intent = Intent(this@LoginActivity, AdminPanelActivity::class.java)
                             intent.putExtra("USER_ID", user.id)
-                            intent.putExtra("RESTAURANT_ID", user.restaurantId)
+                            intent.putExtra("RESTAURANT_ID", user.restaurantId ?: 0)
                             startActivity(intent)
                         }
                         "superadmin" -> {

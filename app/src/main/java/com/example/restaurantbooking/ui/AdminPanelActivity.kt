@@ -25,7 +25,7 @@ class AdminPanelActivity : AppCompatActivity() {
         restaurantId = intent.getIntExtra("RESTAURANT_ID", 0)
 
         val db = AppDatabase.getDatabase(this)
-        val repository = BookingRepository(db.userDao(), db.restaurantDao(), db.bookingDao())
+        val repository = BookingRepository(db.userDao(), db.restaurantDao(), db.bookingDao(), db.reviewDao())
         viewModel = BookingViewModel(repository)
 
         val recyclerView = findViewById<RecyclerView>(R.id.bookingsRecyclerView)

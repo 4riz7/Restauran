@@ -8,22 +8,27 @@ import kotlinx.coroutines.flow.flow
 class BookingRepository(
     private val userDao: UserDao,
     private val restaurantDao: RestaurantDao,
-    private val bookingDao: BookingDao
+    private val bookingDao: BookingDao,
+    private val reviewDao: ReviewDao
 ) {
+    // ... existing code ...
+
+    // Review operations
+    suspend fun addReview(restaurantId: Int, userId: Int, userName: String, rating: Int, comment: String) {
+        val review = Review(restaurantId = restaurantId, userId = userId, userName = userName, rating = rating, comment = comment)
+        reviewDao.insert(review)
+    }
+
+    suspend fun getReviewsForRestaurant(restaurantId: Int): List<Review> {
+        return reviewDao.getReviewsForRestaurant(restaurantId)
+    }
+
     // User operations
     suspend fun registerUser(name: String, email: String, password: String): Boolean {
-        return try {
-            val existingUser = userDao.getUserByEmail(email)
-            if (existingUser != null) {
-                false
-            } else {
-                val user = User(name = name, email = email, password = password, role = "user")
-                userDao.insert(user)
-                true
-            }
-        } catch (e: Exception) {
-            false
-        }
+        if (userDao.getUserByEmail(email) != null) return false
+        val user = User(name = name, email = email, password = password, role = "user")
+        userDao.insert(user)
+        return true
     }
 
     suspend fun loginUser(email: String, password: String): User? {
@@ -31,77 +36,89 @@ class BookingRepository(
     }
 
     // Restaurant operations
-    suspend fun addRestaurant(name: String, address: String, description: String = ""): Restaurant {
-        val restaurant = Restaurant(name = name, address = address, description = description)
+    suspend fun addRestaurant(name: String, address: String, description: String = "", tableCount: Int = 10, websiteUrl: String = ""): Restaurant {
+        val restaurant = Restaurant(name = name, address = address, description = description, tableCount = tableCount, websiteUrl = websiteUrl)
         restaurantDao.insert(restaurant)
         return restaurant
     }
 
-    suspend fun getAllRestaurants(): List<Restaurant> {
-        return restaurantDao.getAllRestaurants()
+    suspend fun getAllRestaurants(): List<RestaurantWithRating> {
+        return restaurantDao.getAllRestaurantsWithRating()
     }
+
+    suspend fun getRestaurantById(restaurantId: Int): Restaurant? {
+        return restaurantDao.getRestaurantById(restaurantId)
+    }
+    
 
     // Booking operations
     suspend fun createBooking(userId: Int, restaurantId: Int, date: String, time: String, guests: Int): Boolean {
-        return try {
-            val booking = Booking(
-                userId = userId,
-                restaurantId = restaurantId,
-                date = date,
-                time = time,
-                guests = guests
-            )
-            bookingDao.insert(booking)
-            true
-        } catch (e: Exception) {
-            false
+        val restaurant = restaurantDao.getRestaurantById(restaurantId) ?: return false
+        val currentBookings = bookingDao.countBookingsByRestaurantAndDateTime(restaurantId, date, time)
+
+        if (currentBookings >= restaurant.tableCount) {
+             return false // No tables available
         }
+
+        val booking = Booking(
+            userId = userId,
+            restaurantId = restaurantId,
+            date = date,
+            time = time,
+            guests = guests
+        )
+        bookingDao.insert(booking)
+        
+        return true
     }
 
-    suspend fun getBookingsForRestaurant(restaurantId: Int): List<Booking> {
-        return bookingDao.getBookingsByRestaurant(restaurantId)
+    suspend fun getBookingsForRestaurant(restaurantId: Int): List<BookingWithRestaurant> {
+        return bookingDao.getBookingsWithRestaurantByRestaurantId(restaurantId)
     }
 
-    suspend fun getAllBookings(): List<Booking> {
-        return bookingDao.getAllBookings()
+    suspend fun getAllBookings(): List<BookingWithRestaurant> {
+        return bookingDao.getAllBookingsWithRestaurant()
     }
 
-    suspend fun getUserBookings(userId: Int): List<Booking> {
+    suspend fun getUserBookings(userId: Int): List<BookingWithRestaurant> {
         return bookingDao.getUserBookings(userId)
+    }
+
+    suspend fun deleteBooking(bookingId: Int) {
+        bookingDao.deleteBookingById(bookingId)
     }
 
     // Admin operations
     suspend fun createAdminForRestaurant(name: String, email: String, password: String, restaurantId: Int): Boolean {
-        return try {
-            val existingUser = userDao.getUserByEmail(email)
-            if (existingUser != null) {
-                false
-            } else {
-                val admin = User(
-                    name = name,
-                    email = email,
-                    password = password,
-                    role = "admin",
-                    restaurantId = restaurantId
-                )
-                userDao.insert(admin)
-                true
-            }
-        } catch (e: Exception) {
-            false
-        }
+        if (userDao.getUserByEmail(email) != null) return false
+        val admin = User(
+            name = name,
+            email = email,
+            password = password,
+            role = "admin",
+            restaurantId = restaurantId
+        )
+        userDao.insert(admin)
+        return true
     }
 
     suspend fun createSuperAdminIfNotExists() {
-        val superAdmin = userDao.getSuperAdmin()
-        if (superAdmin == null) {
+        if (userDao.getUserByEmail("admin") == null) {
             val admin = User(
                 name = "Super Admin",
-                email = "superadmin@admin.com",
-                password = "admin123",
+                email = "admin",
+                password = "123456",
                 role = "superadmin"
             )
             userDao.insert(admin)
         }
+    }
+    
+    suspend fun getUserById(userId: Int): User? {
+        return userDao.getUserById(userId)
+    }
+    
+    suspend fun updateUser(user: User) {
+        userDao.update(user)
     }
 }

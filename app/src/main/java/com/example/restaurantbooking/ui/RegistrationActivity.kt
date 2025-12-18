@@ -20,7 +20,7 @@ class RegistrationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_registration)
 
         val db = AppDatabase.getDatabase(this)
-        val repository = BookingRepository(db.userDao(), db.restaurantDao(), db.bookingDao())
+        val repository = BookingRepository(db.userDao(), db.restaurantDao(), db.bookingDao(), db.reviewDao())
         viewModel = BookingViewModel(repository)
 
         val nameEditText = findViewById<EditText>(R.id.nameEditText)

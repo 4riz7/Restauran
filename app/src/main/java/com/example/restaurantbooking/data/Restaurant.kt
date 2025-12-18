@@ -9,5 +9,7 @@ data class Restaurant(
     val id: Int = 0,
     val name: String,
     val address: String,
-    val description: String = ""
+    val description: String = "",
+    val tableCount: Int = 10,
+    val websiteUrl: String = ""
 )

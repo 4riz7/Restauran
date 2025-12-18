@@ -9,26 +9,36 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.restaurantbooking.R
 import com.example.restaurantbooking.data.Restaurant
+import com.example.restaurantbooking.data.RestaurantWithRating
 
 class RestaurantAdapter(
     private val onItemClick: (Restaurant) -> Unit = {}
-) : ListAdapter<Restaurant, RestaurantAdapter.ViewHolder>(RestaurantDiffCallback()) {
+) : ListAdapter<RestaurantWithRating, RestaurantAdapter.ViewHolder>(RestaurantDiffCallback()) {
 
     class ViewHolder(view: View, private val onItemClick: (Restaurant) -> Unit) : RecyclerView.ViewHolder(view) {
         private val nameTextView: TextView = view.findViewById(R.id.restaurantNameTextView)
         private val addressTextView: TextView = view.findViewById(R.id.restaurantAddressTextView)
-        private var currentRestaurant: Restaurant? = null
+        private val ratingTextView: TextView = view.findViewById(R.id.restaurantRatingTextView)
+        private var currentItem: RestaurantWithRating? = null
 
         init {
             view.setOnClickListener {
-                currentRestaurant?.let { onItemClick(it) }
+                currentItem?.restaurant?.let { onItemClick(it) }
             }
         }
 
-        fun bind(restaurant: Restaurant) {
-            currentRestaurant = restaurant
-            nameTextView.text = restaurant.name
-            addressTextView.text = restaurant.address
+        fun bind(item: RestaurantWithRating) {
+            currentItem = item
+            nameTextView.text = item.restaurant.name
+            addressTextView.text = item.restaurant.address
+            
+            val rating = item.rating
+            if (rating != null && rating > 0) {
+                ratingTextView.visibility = View.VISIBLE
+                ratingTextView.text = String.format("Рейтинг: %.1f ★", rating)
+            } else {
+                ratingTextView.visibility = View.GONE
+            }
         }
     }
 
@@ -43,12 +53,12 @@ class RestaurantAdapter(
     }
 }
 
-class RestaurantDiffCallback : DiffUtil.ItemCallback<Restaurant>() {
-    override fun areItemsTheSame(oldItem: Restaurant, newItem: Restaurant): Boolean {
-        return oldItem.id == newItem.id
+class RestaurantDiffCallback : DiffUtil.ItemCallback<RestaurantWithRating>() {
+    override fun areItemsTheSame(oldItem: RestaurantWithRating, newItem: RestaurantWithRating): Boolean {
+        return oldItem.restaurant.id == newItem.restaurant.id
     }
 
-    override fun areContentsTheSame(oldItem: Restaurant, newItem: Restaurant): Boolean {
+    override fun areContentsTheSame(oldItem: RestaurantWithRating, newItem: RestaurantWithRating): Boolean {
         return oldItem == newItem
     }
 }

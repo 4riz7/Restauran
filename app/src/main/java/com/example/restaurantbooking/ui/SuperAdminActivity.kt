@@ -26,7 +26,7 @@ class SuperAdminActivity : AppCompatActivity() {
         setContentView(R.layout.activity_super_admin)
 
         val db = AppDatabase.getDatabase(this)
-        val repository = BookingRepository(db.userDao(), db.restaurantDao(), db.bookingDao())
+        val repository = BookingRepository(db.userDao(), db.restaurantDao(), db.bookingDao(), db.reviewDao())
         viewModel = BookingViewModel(repository)
 
         val addRestaurantButton = findViewById<Button>(R.id.addRestaurantButton)
@@ -61,7 +61,7 @@ class SuperAdminActivity : AppCompatActivity() {
             val bookings = viewModel.getAllBookings()
             bookingsAdapter.submitList(bookings)
 
-            val restaurants = viewModel.getAllRestaurants()
+            val restaurants = viewModel.getAllRestaurants() // 0 or any dummy ID for admin
             restaurantsAdapter.submitList(restaurants)
         }
     }
