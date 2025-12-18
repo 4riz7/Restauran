@@ -10,9 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.restaurantbooking.R
 import com.example.restaurantbooking.data.BookingWithRestaurant
 
-class BookingAdapter : ListAdapter<BookingWithRestaurant, BookingAdapter.ViewHolder>(BookingDiffCallback()) {
+class BookingAdapter(
+    private val onLongClick: (BookingWithRestaurant) -> Unit = {}
+) : ListAdapter<BookingWithRestaurant, BookingAdapter.ViewHolder>(BookingDiffCallback()) {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(
+        view: View,
+        private val onLongClick: (BookingWithRestaurant) -> Unit
+    ) : RecyclerView.ViewHolder(view) {
         private val dateTextView: TextView = view.findViewById(R.id.dateTextView)
         private val timeTextView: TextView = view.findViewById(R.id.timeTextView)
         private val guestsTextView: TextView = view.findViewById(R.id.guestsTextView)
@@ -34,13 +39,18 @@ class BookingAdapter : ListAdapter<BookingWithRestaurant, BookingAdapter.ViewHol
             } else {
                 userInfoTextView?.visibility = View.GONE
             }
+
+            itemView.setOnLongClickListener {
+                onLongClick(item)
+                true
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_booking, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(view, onLongClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

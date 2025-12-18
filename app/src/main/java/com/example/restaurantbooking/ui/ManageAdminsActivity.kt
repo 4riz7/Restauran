@@ -16,6 +16,7 @@ import com.example.restaurantbooking.data.AppDatabase
 import com.example.restaurantbooking.data.User
 import com.example.restaurantbooking.data.repository.BookingRepository
 import com.example.restaurantbooking.ui.adapter.AdminAdapter
+import com.example.restaurantbooking.ui.adapter.ReviewAdapter
 import com.example.restaurantbooking.viewmodel.BookingViewModel
 import kotlinx.coroutines.launch
 
@@ -23,6 +24,7 @@ class ManageAdminsActivity : AppCompatActivity() {
 
     private lateinit var viewModel: BookingViewModel
     private lateinit var adapter: AdminAdapter
+    private lateinit var reviewAdapter: ReviewAdapter
     private var restaurantId: Int = 0
     private var restaurantName: String = ""
 
@@ -47,6 +49,24 @@ class ManageAdminsActivity : AppCompatActivity() {
             onDeleteClick = { admin -> showDeleteConfirmDialog(admin) }
         )
         recyclerView.adapter = adapter
+ 
+        // Reviews Setup
+        val reviewsRecyclerView = findViewById<RecyclerView>(R.id.reviewsRecyclerView)
+        reviewsRecyclerView.layoutManager = LinearLayoutManager(this)
+        reviewAdapter = ReviewAdapter { review ->
+            AlertDialog.Builder(this)
+                .setTitle("Удаление отзыва")
+                .setMessage("Вы уверены, что хотите удалить этот отзыв?")
+                .setPositiveButton("Удалить") { _, _ ->
+                    lifecycleScope.launch {
+                        viewModel.deleteReview(review.id)
+                        loadData()
+                    }
+                }
+                .setNegativeButton("Отмена", null)
+                .show()
+        }
+        reviewsRecyclerView.adapter = reviewAdapter
 
         findViewById<Button>(R.id.addNewAdminButton).setOnClickListener {
             val intent = Intent(this, AddAdminActivity::class.java)
@@ -55,9 +75,21 @@ class ManageAdminsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        loadAdmins()
+        loadData()
     }
-
+ 
+    private fun loadData() {
+        loadAdmins()
+        loadReviews()
+    }
+ 
+    private fun loadReviews() {
+        lifecycleScope.launch {
+            val reviews = viewModel.getReviewsForRestaurant(restaurantId)
+            reviewAdapter.submitList(reviews)
+        }
+    }
+ 
     private fun loadAdmins() {
         lifecycleScope.launch {
             val admins = viewModel.getAdminsByRestaurant(restaurantId)
@@ -116,6 +148,6 @@ class ManageAdminsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadAdmins()
+        loadData()
     }
 }

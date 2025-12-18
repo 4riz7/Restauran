@@ -12,10 +12,15 @@ import com.example.restaurantbooking.data.Restaurant
 import com.example.restaurantbooking.data.RestaurantWithRating
 
 class RestaurantAdapter(
-    private val onItemClick: (Restaurant) -> Unit = {}
+    private val onItemClick: (Restaurant) -> Unit = {},
+    private val onLongClick: (Restaurant) -> Unit = {}
 ) : ListAdapter<RestaurantWithRating, RestaurantAdapter.ViewHolder>(RestaurantDiffCallback()) {
 
-    class ViewHolder(view: View, private val onItemClick: (Restaurant) -> Unit) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(
+        view: View,
+        private val onItemClick: (Restaurant) -> Unit,
+        private val onLongClick: (Restaurant) -> Unit
+    ) : RecyclerView.ViewHolder(view) {
         private val nameTextView: TextView = view.findViewById(R.id.restaurantNameTextView)
         private val addressTextView: TextView = view.findViewById(R.id.restaurantAddressTextView)
         private val ratingTextView: TextView = view.findViewById(R.id.restaurantRatingTextView)
@@ -25,13 +30,17 @@ class RestaurantAdapter(
             view.setOnClickListener {
                 currentItem?.restaurant?.let { onItemClick(it) }
             }
+            view.setOnLongClickListener {
+                currentItem?.restaurant?.let { onLongClick(it) }
+                true
+            }
         }
 
         fun bind(item: RestaurantWithRating) {
             currentItem = item
             nameTextView.text = item.restaurant.name
             addressTextView.text = item.restaurant.address
-            
+
             val rating = item.rating
             if (rating != null && rating > 0) {
                 ratingTextView.visibility = View.VISIBLE
@@ -45,7 +54,7 @@ class RestaurantAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_restaurant, parent, false)
-        return ViewHolder(view, onItemClick)
+        return ViewHolder(view, onItemClick, onLongClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

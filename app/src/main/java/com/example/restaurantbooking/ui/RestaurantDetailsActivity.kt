@@ -52,12 +52,30 @@ class RestaurantDetailsActivity : AppCompatActivity() {
 
         // Reviews Setup
         val recyclerView = findViewById<RecyclerView>(R.id.reviewsRecyclerView)
-        reviewAdapter = ReviewAdapter()
+        reviewAdapter = ReviewAdapter { review ->
+            lifecycleScope.launch {
+                val currentUser = viewModel.getUserById(userId)
+                if (currentUser?.role == "superadmin") {
+                    androidx.appcompat.app.AlertDialog.Builder(this@RestaurantDetailsActivity)
+                        .setTitle("Удаление отзыва")
+                        .setMessage("Вы уверены, что хотите удалить этот отзыв?")
+                        .setPositiveButton("Удалить") { _, _ ->
+                            lifecycleScope.launch {
+                                viewModel.deleteReview(review.id)
+                                loadReviews()
+                                Toast.makeText(this@RestaurantDetailsActivity, "Отзыв удален", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        .setNegativeButton("Отмена", null)
+                        .show()
+                }
+            }
+        }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = reviewAdapter
 
         val toggleFormButton = findViewById<Button>(R.id.toggleReviewFormButton)
-        val formLayout = findViewById<LinearLayout>(R.id.reviewFormLayout)
+        val formLayout = findViewById<View>(R.id.reviewFormLayout)
         val ratingBar = findViewById<RatingBar>(R.id.ratingBar)
         val commentEditText = findViewById<EditText>(R.id.reviewCommentEditText)
         val submitButton = findViewById<Button>(R.id.submitReviewButton)

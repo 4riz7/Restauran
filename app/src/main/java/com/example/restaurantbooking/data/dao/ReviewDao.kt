@@ -12,4 +12,7 @@ interface ReviewDao {
 
     @Query("SELECT * FROM reviews WHERE restaurantId = :restaurantId ORDER BY date DESC")
     suspend fun getReviewsForRestaurant(restaurantId: Int): List<Review>
+
+    @Query("DELETE FROM reviews WHERE id = :reviewId")
+    suspend fun deleteById(reviewId: Int)
 }

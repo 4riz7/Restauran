@@ -34,17 +34,44 @@ class SuperAdminActivity : AppCompatActivity() {
         val allRestaurantsRecyclerView = findViewById<RecyclerView>(R.id.allRestaurantsRecyclerView)
 
         // Настройка адаптера для бронирований
-        bookingsAdapter = BookingAdapter()
+        bookingsAdapter = BookingAdapter { item ->
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Удаление бронирования")
+                .setMessage("Удалить бронирование #${item.booking.id}?")
+                .setPositiveButton("Удалить") { _, _ ->
+                    lifecycleScope.launch {
+                        viewModel.deleteBookingById(item.booking.id)
+                        loadData()
+                    }
+                }
+                .setNegativeButton("Отмена", null)
+                .show()
+        }
         allBookingsRecyclerView.layoutManager = LinearLayoutManager(this)
         allBookingsRecyclerView.adapter = bookingsAdapter
-
+ 
         // Настройка адаптера для ресторанов
-        restaurantsAdapter = RestaurantAdapter { restaurant ->
-            val intent = Intent(this, ManageAdminsActivity::class.java)
-            intent.putExtra("RESTAURANT_ID", restaurant.id)
-            intent.putExtra("RESTAURANT_NAME", restaurant.name)
-            startActivity(intent)
-        }
+        restaurantsAdapter = RestaurantAdapter(
+            onItemClick = { restaurant ->
+                val intent = Intent(this, ManageAdminsActivity::class.java)
+                intent.putExtra("RESTAURANT_ID", restaurant.id)
+                intent.putExtra("RESTAURANT_NAME", restaurant.name)
+                startActivity(intent)
+            },
+            onLongClick = { restaurant ->
+                androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("Удаление ресторана")
+                    .setMessage("Вы уверены, что хотите удалить ресторан '${restaurant.name}'? Это удалит все связанные данные.")
+                    .setPositiveButton("Удалить") { _, _ ->
+                        lifecycleScope.launch {
+                            viewModel.deleteRestaurant(restaurant)
+                            loadData()
+                        }
+                    }
+                    .setNegativeButton("Отмена", null)
+                    .show()
+            }
+        )
         allRestaurantsRecyclerView.layoutManager = LinearLayoutManager(this)
         allRestaurantsRecyclerView.adapter = restaurantsAdapter
 

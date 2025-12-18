@@ -12,7 +12,9 @@ import com.example.restaurantbooking.data.Review
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ReviewAdapter : ListAdapter<Review, ReviewAdapter.ViewHolder>(ReviewDiffCallback()) {
+class ReviewAdapter(
+    private val onLongClick: (Review) -> Unit = {}
+) : ListAdapter<Review, ReviewAdapter.ViewHolder>(ReviewDiffCallback()) {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val userNameTextView: TextView = view.findViewById(R.id.userNameTextView)
@@ -28,6 +30,13 @@ class ReviewAdapter : ListAdapter<Review, ReviewAdapter.ViewHolder>(ReviewDiffCa
             val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             dateTextView.text = sdf.format(Date(review.date))
         }
+
+        fun setOnLongClickListener(review: Review, onLongClick: (Review) -> Unit) {
+            itemView.setOnLongClickListener {
+                onLongClick(review)
+                true
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,7 +46,9 @@ class ReviewAdapter : ListAdapter<Review, ReviewAdapter.ViewHolder>(ReviewDiffCa
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val review = getItem(position)
+        holder.bind(review)
+        holder.setOnLongClickListener(review, onLongClick)
     }
 }
 

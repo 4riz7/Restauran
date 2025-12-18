@@ -29,8 +29,20 @@ class AdminPanelActivity : AppCompatActivity() {
         viewModel = BookingViewModel(repository)
 
         val recyclerView = findViewById<RecyclerView>(R.id.bookingsRecyclerView)
-        adapter = BookingAdapter()
-
+        adapter = BookingAdapter { item ->
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Удаление бронирования")
+                .setMessage("Удалить бронирование #${item.booking.id}?")
+                .setPositiveButton("Удалить") { _, _ ->
+                    lifecycleScope.launch {
+                        viewModel.deleteBookingById(item.booking.id)
+                        loadBookings()
+                    }
+                }
+                .setNegativeButton("Отмена", null)
+                .show()
+        }
+ 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 

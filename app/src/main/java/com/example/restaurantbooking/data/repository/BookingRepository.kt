@@ -14,11 +14,6 @@ class BookingRepository(
     // ... existing code ...
 
     // Review operations
-    suspend fun addReview(restaurantId: Int, userId: Int, userName: String, rating: Int, comment: String) {
-        val review = Review(restaurantId = restaurantId, userId = userId, userName = userName, rating = rating, comment = comment)
-        reviewDao.insert(review)
-    }
-
     suspend fun getReviewsForRestaurant(restaurantId: Int): List<Review> {
         return reviewDao.getReviewsForRestaurant(restaurantId)
     }
@@ -48,6 +43,10 @@ class BookingRepository(
 
     suspend fun getRestaurantById(restaurantId: Int): Restaurant? {
         return restaurantDao.getRestaurantById(restaurantId)
+    }
+
+    suspend fun deleteRestaurant(restaurant: Restaurant) {
+        restaurantDao.delete(restaurant)
     }
     
 
@@ -124,6 +123,21 @@ class BookingRepository(
     
     suspend fun getUserById(userId: Int): User? {
         return userDao.getUserById(userId)
+    }
+    
+    suspend fun addReview(restaurantId: Int, userId: Int, fallbackName: String, rating: Int, comment: String) {
+        val user = userDao.getUserById(userId)
+        val finalName = user?.name ?: fallbackName
+        val review = Review(restaurantId = restaurantId, userId = userId, userName = finalName, rating = rating, comment = comment)
+        reviewDao.insert(review)
+    }
+
+    suspend fun deleteReview(reviewId: Int) {
+        reviewDao.deleteById(reviewId)
+    }
+
+    suspend fun deleteReviewById(reviewId: Int) {
+        reviewDao.deleteById(reviewId)
     }
     
     suspend fun updateUser(user: User) {

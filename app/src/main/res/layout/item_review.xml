@@ -1,50 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:layout_marginBottom="8dp"
-    android:background="@android:color/white"
-    android:elevation="2dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="?attr/colorSurface">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="4dp">
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:id="@+id/userNameTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="User Name"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface"/>
+
+            <TextView
+                android:id="@+id/ratingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5/5"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary"/>
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/userNameTextView"
-            android:layout_width="0dp"
+            android:id="@+id/commentTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="User Name"
-            android:textStyle="bold"/>
+            android:text="Good restaurant!"
+            android:textSize="14sp"
+            android:textColor="?attr/colorOnSurface"
+            android:layout_marginTop="4dp"/>
 
         <TextView
-            android:id="@+id/ratingTextView"
-            android:layout_width="wrap_content"
+            android:id="@+id/dateTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="5/5"
-            android:textStyle="bold"
-            android:textColor="@android:color/holo_orange_dark"/>
+            android:text="12.12.2024"
+            android:textSize="12sp"
+            android:textColor="?attr/colorOnSurface"
+            android:alpha="0.7"
+            android:layout_marginTop="8dp"/>
+
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/commentTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Good restaurant!"
-        android:layout_marginTop="4dp"/>
-    
-    <TextView
-        android:id="@+id/dateTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="12.12.2024"
-        android:textSize="12sp"
-        android:textColor="@android:color/darker_gray"
-        android:layout_marginTop="4dp"/>
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

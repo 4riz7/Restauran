@@ -11,6 +11,7 @@ import com.example.restaurantbooking.data.AppDatabase
 import com.example.restaurantbooking.data.repository.BookingRepository
 import com.example.restaurantbooking.ui.adapter.RestaurantAdapter
 import com.example.restaurantbooking.viewmodel.BookingViewModel
+import com.example.restaurantbooking.ui.adapter.HorizontalBookingAdapter
 import kotlinx.coroutines.launch
 
 class UserRestaurantsActivity : AppCompatActivity() {
@@ -35,13 +36,13 @@ class UserRestaurantsActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.addItemDecoration(spacingDecoration)
 
-        val adapter = RestaurantAdapter { restaurant ->
+        val adapter = RestaurantAdapter(onItemClick = { restaurant ->
             val intent = Intent(this, RestaurantDetailsActivity::class.java)
             intent.putExtra("RESTAURANT_ID", restaurant.id)
             intent.putExtra("RESTAURANT_NAME", restaurant.name)
             intent.putExtra("USER_ID", userId)
             startActivity(intent)
-        }
+        })
         recyclerView.adapter = adapter
 
         // Мои бронирования

@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="280dp"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="12dp"
-    app:cardCornerRadius="8dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="16dp"
     app:cardElevation="4dp"
-    app:cardBackgroundColor="@android:color/white">
+    app:cardBackgroundColor="?attr/colorSurface">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="4dp">
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:id="@+id/dateTextView"
@@ -28,7 +28,7 @@
                 android:text="15.12.2024"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                android:textColor="?attr/colorOnSurface"/>
 
             <TextView
                 android:id="@+id/timeTextView"
@@ -37,7 +37,7 @@
                 android:text="19:00"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="@color/purple_500"/>
+                android:textColor="?attr/colorPrimary"/>
 
         </LinearLayout>
 
@@ -46,10 +46,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ресторан: "
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginBottom="4dp"/>
 
         <TextView
@@ -58,26 +59,36 @@
             android:layout_height="wrap_content"
             android:text="Гостей: 4"
             android:textSize="12sp"
-            android:layout_marginBottom="4dp"/>
+            android:textColor="?attr/colorOnSurface"
+            android:alpha="0.7"
+            android:layout_marginBottom="8dp"/>
 
-        <TextView
-            android:id="@+id/bookingIdTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="[0018]"
-            android:textSize="10sp"
-            android:textColor="@android:color/darker_gray"
-            android:layout_gravity="end"/>
-
-        <Button
-            android:id="@+id/cancelButton"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Отменить"
-            android:textColor="@android:color/white"
-            android:backgroundTint="#FF5252"
-            android:layout_marginTop="8dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <Button
+                android:id="@+id/cancelButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Отменить"
+                android:textColor="#E53935"
+                app:rippleColor="#20E53935"/>
+
+            <TextView
+                android:id="@+id/bookingIdTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[0018]"
+                android:textSize="10sp"
+                android:textColor="?attr/colorOnSurface"
+                android:alpha="0.5"/>
+        </LinearLayout>
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
