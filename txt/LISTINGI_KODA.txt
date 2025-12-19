@@ -1,0 +1,46 @@
+Листинг 1 — Booking.kt
+package com.example.restaurantbooking.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "bookings")
+data class Booking(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val userId: Int,
+    val restaurantId: Int,
+    val date: String,
+    val time: String,
+    val guests: Int,
+    val createdAt: Long = System.currentTimeMillis()
+)
+
+Файл BookingViewModel является ключевым связующим звеном между данными и пользовательским интерфейсом. Класс наследуется от стандартного компонента ViewModel и служит для отделения бизнес-логики приложения от UI-слоя. Благодаря этому обеспечивается сохранность состояния при повороте экрана и реактивное взаимодействие с репозиторием данных через корутины (Листинг 2).
+
+Листинг 2 — BookingViewModel.kt
+class BookingViewModel(private val repository: BookingRepository) : ViewModel() {
+
+    init {
+        viewModelScope.launch {
+            repository.createSuperAdminIfNotExists()
+        }
+    }
+
+    suspend fun getAllRestaurants() = repository.getAllRestaurants()
+    
+    suspend fun getUserBookings(userId: Int) = repository.getUserBookings(userId)
+}
+
+Одним из центральных методов бизнес-логики является создание нового бронирования. Метод берет на себя проверку условий (через репозиторий) и сохранение записи в базу данных, возвращая результат операции (Листинг 3).
+
+Листинг 3 — Метод создания бронирования
+suspend fun createBooking(
+    userId: Int, 
+    restaurantId: Int, 
+    date: String, 
+    time: String, 
+    guests: Int
+): Boolean {
+    return repository.createBooking(userId, restaurantId, date, time, guests)
+}
